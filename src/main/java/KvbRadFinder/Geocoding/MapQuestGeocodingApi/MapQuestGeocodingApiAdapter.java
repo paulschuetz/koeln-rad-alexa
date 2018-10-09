@@ -5,14 +5,14 @@ import KvbRadFinder.Geocoding.Exceptions.AuthorizationException;
 import KvbRadFinder.Geocoding.Exceptions.ExternalServiceCommunicationException;
 import KvbRadFinder.Geocoding.Exceptions.InsufficientAddressInformationException;
 import KvbRadFinder.Geocoding.GeocodingService;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.GetRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.utils.URIBuilder;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.net.URISyntaxException;
 
 import static KvbRadFinder.Keys.MAPQUEST_API_KEY;
@@ -26,20 +26,28 @@ public class MapQuestGeocodingApiAdapter implements GeocodingService {
     @Override
     public GeoLocation getGeoLocation(String address) throws ExternalServiceCommunicationException, AuthorizationException, InsufficientAddressInformationException {
 
+
         GeocodeAdressApiQuery query = new GeocodeAdressApiQuery(address).withMaxResults(MAX_RESULTS);
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(query.construct());
-        Response response = target.request(MediaType.APPLICATION_JSON).get();
+        GetRequest get = Unirest.get(query.construct()).header("Accept", MediaType.APPLICATION_JSON);
+
+        HttpResponse<RResolvedLocation> response;
+        try {
+            response = get.asObject(RResolvedLocation.class);
+        } catch (UnirestException e) {
+            e.printStackTrace();
+            throw new ExternalServiceCommunicationException();
+        }
+
         if(response.getStatus() >= 500) throw new ExternalServiceCommunicationException();
         if(response.getStatus() == 403) throw new AuthorizationException();
 
-        RResolvedLocation location = target.request().get(RResolvedLocation.class);
-        log.info(location.toString());
+        RResolvedLocation location = response.getBody();
+        System.out.println("user location:" + location);
 
         // check quality of location
         if(!location.getGeoCodeQuality().equals("POINT")) throw new InsufficientAddressInformationException();
 
-        return new GeoLocation(location.getLatituide(), location.getLatituide());
+        return new GeoLocation(location.getLatitude(), location.getLatitude());
     }
 
     @Override

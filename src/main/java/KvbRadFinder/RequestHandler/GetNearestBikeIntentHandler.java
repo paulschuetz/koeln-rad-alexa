@@ -97,9 +97,10 @@ public class GetNearestBikeIntentHandler implements RequestHandler{
         URI smallImage = staticMapImageCreator.constructMap(userLocation,nearestBike.getDestination(), new ImageOptions().withSize(SMALL_IMAGE));
         URI largeImage = staticMapImageCreator.constructMap(userLocation,nearestBike.getDestination(), new ImageOptions().withSize(LARGE_IMAGE));
 
-        Image image = Image.builder().withSmallImageUrl(smallImage.toString()).withLargeImageUrl(largeImage.toString()).build();
+        Image image = Image.builder().withLargeImageUrl(largeImage.toString()).build();
         return handlerInput.getResponseBuilder()
                 .withSpeech("Das naechste Fahrrad ist " +  (int) nearestBike.getDistance() + " Meter entfernt. Schau mal in deine Alexa App!")
+                .withStandardCard("Mein Fahrrad", "Das Fahrrad ist " + (int) nearestBike.getDistance() + " Meter entfernt.", image)
                 .withShouldEndSession(true)
                 .build();
     }

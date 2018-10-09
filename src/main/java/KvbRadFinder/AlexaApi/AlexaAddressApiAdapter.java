@@ -8,6 +8,8 @@ import org.apache.http.HttpStatus;
 
 import javax.ws.rs.core.MediaType;
 
+import static KvbRadFinder.AlexaApi.CountryCodeHelper.getCountry;
+
 public class AlexaAddressApiAdapter {
 
     private static final String apiAdressPath = "/v1/devices/*deviceId*/settings/address";
@@ -27,32 +29,39 @@ public class AlexaAddressApiAdapter {
                 throw new MissingUserAuthorizationException("user has not accepted to give street details yet");
             if (response.getStatus() != HttpStatus.SC_OK)
                 throw new RequestFailedException("status code was " + response.getStatus());
-            // get response
-            String city = response.getBody()
-                    .getObject()
-                    .getString("city");
-            int postalCode = response.getBody()
-                    .getObject()
-                    .getInt("postalCode");
-            String address = response.getBody()
-                    .getObject()
-                    .getString("addressLine1");
-            String countryCode = response.getBody()
-                    .getObject()
-                    .getString("countryCode");
-            String country = CountryCodeHelper.getCountry(countryCode);
 
-            System.out.println("city: " + city + "postalCode: " + postalCode + " address: " + address +  " country " +  country);
+            UserAddress userAddress = createAddress(response);
+            return userAddress;
 
-            if(address==null) throw new InsufficientAddressInformationException();
-            if(postalCode==0 && city==null) throw new InsufficientAddressInformationException();
-            UserAddress location;
-            if(postalCode==0) location= new UserAddress(address, city).withCountry(country);
-            else location= new UserAddress(address, postalCode).withCountry(country);
-            return location;
         }catch (UnirestException e){
             throw new RequestFailedException(e.getMessage(), e);
-        }catch (IllegalArgumentException e) {
+        }
+    }
+
+    private UserAddress createAddress(HttpResponse<JsonNode> response) throws InsufficientAddressInformationException{
+        String city = null;
+        if(!response.getBody().getObject().isNull("city"))
+            city = response.getBody().getObject().getString("city");
+
+        int postalCode = response.getBody().getObject().getInt("postalCode");
+
+        String address=null;
+        if(!response.getBody().getObject().isNull("addressLine1"))
+            address = response.getBody().getObject().getString("addressLine1");
+        if(!response.getBody().getObject().isNull("addressLine2")){
+            if(address==null) address = response.getBody().getObject().getString("addressLine2");
+            else address+= "," + response.getBody().getObject().getString("addressLine2");
+        }
+
+        String country = null;
+        if(!response.getBody().getObject().isNull("countryCode")){
+            String countryCode=response.getBody().getObject().getString("countryCode");
+            country = CountryCodeHelper.getCountry(countryCode);
+        }
+
+        try{
+            return new UserAddress(country, city, postalCode, address);
+        }catch(IllegalArgumentException e){
             throw new InsufficientAddressInformationException();
         }
     }

@@ -1,6 +1,7 @@
 package KvbRadFinder.AlexaApi;
 
 import com.sun.istack.internal.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -11,6 +12,16 @@ public class UserAddress {
     int postalCode;
     String street;
     String country;
+
+    public UserAddress(String country, String city, int postalCode, String street){
+        if(street==null) throw new IllegalArgumentException("street was null");
+        if(city==null && postalCode==0) throw new IllegalArgumentException("missing postalcode/city");
+
+        this.country=country;
+        this.city=city;
+        this.postalCode=postalCode;
+        this.street=street;
+    }
 
     public UserAddress(@NotNull String street, @NotNull String city){
         if(street ==null || city ==null) throw new IllegalArgumentException("street or city can not be null");

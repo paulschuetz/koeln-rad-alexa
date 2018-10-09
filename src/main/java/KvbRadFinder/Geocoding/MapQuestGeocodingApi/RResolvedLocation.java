@@ -14,7 +14,7 @@ import java.util.Map;
 public class RResolvedLocation {
     private String geoCodeQuality;
     @JsonProperty("lat")
-    private double latituide;
+    private double latitude;
     @JsonProperty("lng")
     private double longitude;
 
@@ -25,7 +25,7 @@ public class RResolvedLocation {
         Map<String, Object> location =  (Map<String, Object>) locations.get(0);
         this.geoCodeQuality = (String) location.get("geocodeQuality");
         Map<String,Double> latlng = (Map<String,Double>) location.get("latLng");
-        this.latituide = (Double) latlng.get("lat").doubleValue();
+        this.latitude = (Double) latlng.get("lat").doubleValue();
         this.longitude = (Double) latlng.get("lng").doubleValue();
     }
 }

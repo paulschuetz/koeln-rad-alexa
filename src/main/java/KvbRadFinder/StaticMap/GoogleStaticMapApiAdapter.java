@@ -21,13 +21,15 @@ public class GoogleStaticMapApiAdapter implements StaticMapImageCreator {
     @Override
     public URI constructMap(GeoLocation from, GeoLocation to, ImageOptions options) {
         try {
-            URIBuilder uri = new URIBuilder(GOOGLE_MAPS_STATIC_BASE_URL);
+            URIBuilder uriBuilder = new URIBuilder(GOOGLE_MAPS_STATIC_BASE_URL);
             Size size = (options.getSize()==null) ? DEFAULT_SIZE : options.getSize();
-            uri.addParameter("size",toGoogleSizeParameter(size));
-            uri.addParameter("path",toGooglePathParameter(from,to));
-            uri.addParameter("markers",toGooglePathParameter(to));
-            uri.addParameter("key", GOOGLE_MAPS_STATIC_API_KEY);
-            return uri.build();
+            uriBuilder.addParameter("size",toGoogleSizeParameter(size));
+            uriBuilder.addParameter("path",toGooglePathParameter(from,to));
+            uriBuilder.addParameter("markers",toGooglePathParameter(to));
+            uriBuilder.addParameter("key", GOOGLE_MAPS_STATIC_API_KEY);
+            URI uri =  uriBuilder.build();
+            System.out.println("constructed new map: " + uri.toString());
+            return uri;
         } catch (URISyntaxException e) {
             throw new RuntimeException("could not build uri for google static image api", e);
         }
