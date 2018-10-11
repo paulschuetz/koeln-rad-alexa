@@ -1,16 +1,15 @@
 import KvbRadFinder.GeoLocation;
 import com.google.common.collect.Sets;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WayTest {
 
     @Test
     public void getNearestTest(){
-
 
         GeoLocation start = new GeoLocation(10,10);
 

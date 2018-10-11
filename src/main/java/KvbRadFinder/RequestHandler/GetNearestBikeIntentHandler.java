@@ -25,9 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static KvbRadFinder.Constants.LARGE_IMAGE;
-import static KvbRadFinder.Constants.SMALL_IMAGE;
-import static KvbRadFinder.Constants.UNKNOWN_FAILURE;
+import static KvbRadFinder.Constants.*;
 import static com.amazon.ask.request.Predicates.*;
 
 @Slf4j
@@ -87,7 +85,8 @@ public class GetNearestBikeIntentHandler implements RequestHandler{
         }
         // okay jetzt werden die Räder gefetcht
         NextBikeDataFetcher dataFetcher = new NextBikeXMLDataFetcher();
-        Set<GeoLocation> bikeLocations = dataFetcher.getBikes().stream().map(Bike::getGeoLocation).collect(Collectors.toSet());
+        Set<Bike> bikes = dataFetcher.getBikes();
+        Set<GeoLocation> bikeLocations = bikes.stream().map(Bike::getGeoLocation).collect(Collectors.toSet());
 
         // get nearest bike
         Way nearestBike = userLocation.nearest(bikeLocations);
@@ -95,7 +94,7 @@ public class GetNearestBikeIntentHandler implements RequestHandler{
         // now get the image
         StaticMapImageCreator staticMapImageCreator = new GoogleStaticMapApiAdapter();
         URI smallImage = staticMapImageCreator.constructMap(userLocation,nearestBike.getDestination(), new ImageOptions().withSize(SMALL_IMAGE));
-        URI largeImage = staticMapImageCreator.constructMap(userLocation,nearestBike.getDestination(), new ImageOptions().withSize(LARGE_IMAGE));
+        URI largeImage = staticMapImageCreator.constructMap(userLocation,nearestBike.getDestination(), new ImageOptions().withSize(XTRA_LARGE));
 
         Image image = Image.builder().withLargeImageUrl(largeImage.toString()).build();
         return handlerInput.getResponseBuilder()

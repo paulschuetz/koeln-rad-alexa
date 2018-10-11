@@ -3,16 +3,15 @@ import KvbRadFinder.StaticMap.GoogleStaticMapApiAdapter;
 import KvbRadFinder.StaticMap.ImageOptions;
 import KvbRadFinder.StaticMap.StaticMapImageCreator;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 public class GoogleStaticMapApiAdapterTest {

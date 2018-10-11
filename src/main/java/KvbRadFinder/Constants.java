@@ -11,4 +11,5 @@ public class Constants {
 
     public static final Size SMALL_IMAGE = new Size(720,480);
     public static final Size LARGE_IMAGE = new Size(1200,800);
+    public static final Size XTRA_LARGE = new Size(1800,1200);
 }

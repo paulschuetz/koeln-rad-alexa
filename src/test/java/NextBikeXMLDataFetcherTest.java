@@ -2,13 +2,11 @@ import KvbRadFinder.NextBike.Bike;
 import KvbRadFinder.NextBike.NextBikeDataFetcher;
 import KvbRadFinder.NextBike.NextBikeXMLDataFetcher;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.function.BinaryOperator;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 public class NextBikeXMLDataFetcherTest {
@@ -17,7 +15,7 @@ public class NextBikeXMLDataFetcherTest {
     public void testXMLParsing(){
         NextBikeDataFetcher fetcher = new NextBikeXMLDataFetcher();
         Collection<Bike> bikes = fetcher.getBikes();
-        assertTrue("no bikes were returned", bikes.size()>0);
+        assertTrue(()->bikes.size()>0, "no bikes were returned");
     }
 
 }

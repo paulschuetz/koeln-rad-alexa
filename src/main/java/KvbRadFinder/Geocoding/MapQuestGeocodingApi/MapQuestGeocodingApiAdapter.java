@@ -42,12 +42,13 @@ public class MapQuestGeocodingApiAdapter implements GeocodingService {
         if(response.getStatus() == 403) throw new AuthorizationException();
 
         RResolvedLocation location = response.getBody();
-        System.out.println("user location:" + location);
 
         // check quality of location
-        if(!location.getGeoCodeQuality().equals("POINT")) throw new InsufficientAddressInformationException();
+        String geoCodeQuality = location.getGeoCodeQuality();
+        if(!geoCodeQuality.equals("POINT"))
+            throw new InsufficientAddressInformationException("getCodeQuality for " + address + " was " + geoCodeQuality + " but expected was POINT");
 
-        return new GeoLocation(location.getLatitude(), location.getLatitude());
+        return new GeoLocation(location.getLatitude(), location.getLongitude());
     }
 
     @Override

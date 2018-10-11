@@ -23,9 +23,9 @@ public class GoogleStaticMapApiAdapter implements StaticMapImageCreator {
         try {
             URIBuilder uriBuilder = new URIBuilder(GOOGLE_MAPS_STATIC_BASE_URL);
             Size size = (options.getSize()==null) ? DEFAULT_SIZE : options.getSize();
-            uriBuilder.addParameter("size",toGoogleSizeParameter(size));
-            uriBuilder.addParameter("path",toGooglePathParameter(from,to));
-            uriBuilder.addParameter("markers",toGooglePathParameter(to));
+            uriBuilder.addParameter("size", toGoogleSizeParameter(size));
+            uriBuilder.addParameter("path", toGooglePathParameter(from,to));
+            uriBuilder.addParameter("markers", toGooglePathParameter(to));
             uriBuilder.addParameter("key", GOOGLE_MAPS_STATIC_API_KEY);
             URI uri =  uriBuilder.build();
             System.out.println("constructed new map: " + uri.toString());
