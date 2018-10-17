@@ -17,12 +17,12 @@ import java.util.Set;
 public class KvbRadFinderStreamHandler extends SkillStreamHandler {
 
     @Inject
-    public KvbRadFinderStreamHandler(Set<RequestHandler> requestHandlers) {
-        super(getSkill(requestHandlers));
+    public KvbRadFinderStreamHandler() {
+        super(getSkill());
         initializeUnirest();
     }
 
-    private static Skill getSkill(Set<RequestHandler> requestHandlers){
+    private static Skill getSkill(){
         return Skills.standard()
                 .addRequestHandlers(
                         new CancelAndStopIntentHandler(),
