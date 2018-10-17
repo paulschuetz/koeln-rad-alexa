@@ -1,8 +1,8 @@
 package KvbRadFinder.StaticMap;
 
 import KvbRadFinder.GeoLocation;
-import com.sun.istack.internal.NotNull;
 import org.apache.http.client.utils.URIBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
 import java.net.URISyntaxException;

@@ -15,7 +15,7 @@ public class GeoLocation {
 
     public Way nearest(Set<GeoLocation> geoLocations){
         Way wayToNearestBike = geoLocations.stream().map(geoLocation -> new Way(this, geoLocation)).reduce((nearest,other)->{
-            if(nearest.getDistance() < other.getDistance()) return nearest;
+            if(nearest.distance() < other.distance()) return nearest;
             return other;
         }).orElse(new Way(new GeoLocation(0,0),new GeoLocation(0,0)));
 

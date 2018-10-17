@@ -1,3 +1,4 @@
+import KvbRadFinder.Address;
 import KvbRadFinder.GeoLocation;
 import KvbRadFinder.Geocoding.Exceptions.AuthorizationException;
 import KvbRadFinder.Geocoding.Exceptions.ExternalServiceCommunicationException;
@@ -16,7 +17,7 @@ public class MapQuestGeocodingApiAdapterTest {
     final static GeoLocation AUTOHAUS_DIRKES = new GeoLocation(50.94731,6.89758);
 
     @Test
-    public void getGeoLocationTest_validRequest(){
+    public void getGeoLocation_validInput(){
         SetUp.initializeUnirest();
         try {
             GeoLocation location = mapQuestApi.getGeoLocation("Deutschland Köln 50825 Maarweg 241");
@@ -27,6 +28,21 @@ public class MapQuestGeocodingApiAdapterTest {
         } catch (Exception e){
             e.printStackTrace();
             fail();
+        }
+    }
+
+    @Test
+    public void getAddress_validInput(){
+        SetUp.initializeUnirest();
+        try{
+            Address address = mapQuestApi.getAddress(AUTOHAUS_DIRKES);
+            log.info("Addess: " + address.toString());
+            assertTrue(address.getPostalCode()==50825);
+            assertTrue(address.getStreet().contains("Maarweg"));
+        } catch (AuthorizationException e) {
+            e.printStackTrace();
+        } catch (ExternalServiceCommunicationException e) {
+            e.printStackTrace();
         }
     }
 }

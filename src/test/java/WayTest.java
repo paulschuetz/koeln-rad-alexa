@@ -20,7 +20,7 @@ public class WayTest {
 
         Set<GeoLocation> bikes = Sets.newHashSet(bike1,bike2,bike3,bike4);
 
-        assertTrue(start.nearest(bikes).getStart()==start);
-        assertTrue(start.nearest(bikes).getDestination()==bike4);
+        assertTrue(start.nearest(bikes).start()==start);
+        assertTrue(start.nearest(bikes).destination()==bike4);
     }
 }

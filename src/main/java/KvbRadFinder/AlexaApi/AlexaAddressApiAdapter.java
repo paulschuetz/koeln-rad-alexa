@@ -1,5 +1,6 @@
 package KvbRadFinder.AlexaApi;
 
+import KvbRadFinder.Address;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -8,13 +9,11 @@ import org.apache.http.HttpStatus;
 
 import javax.ws.rs.core.MediaType;
 
-import static KvbRadFinder.AlexaApi.CountryCodeHelper.getCountry;
-
 public class AlexaAddressApiAdapter {
 
     private static final String apiAdressPath = "/v1/devices/*deviceId*/settings/address";
 
-    public UserAddress getUserLocation(String apiToken, String deviceId, String apiEndpoint) throws MissingUserAuthorizationException, RequestFailedException, InsufficientAddressInformationException {
+    public Address getUserLocation(String apiToken, String deviceId, String apiEndpoint) throws MissingUserAuthorizationException, RequestFailedException, InsufficientAddressInformationException {
         String url = apiEndpoint + apiAdressPath.replace("*deviceId*", deviceId);
         System.out.println("Get the location of the user: " + url);
         try {
@@ -30,7 +29,7 @@ public class AlexaAddressApiAdapter {
             if (response.getStatus() != HttpStatus.SC_OK)
                 throw new RequestFailedException("status code was " + response.getStatus());
 
-            UserAddress userAddress = createAddress(response);
+            Address userAddress = createAddress(response);
             return userAddress;
 
         }catch (UnirestException e){
@@ -38,7 +37,7 @@ public class AlexaAddressApiAdapter {
         }
     }
 
-    private UserAddress createAddress(HttpResponse<JsonNode> response) throws InsufficientAddressInformationException{
+    private Address createAddress(HttpResponse<JsonNode> response) throws InsufficientAddressInformationException{
         String city = null;
         if(!response.getBody().getObject().isNull("city"))
             city = response.getBody().getObject().getString("city");
@@ -60,7 +59,7 @@ public class AlexaAddressApiAdapter {
         }
 
         try{
-            return new UserAddress(country, city, postalCode, address);
+            return new Address(country, city, postalCode, address);
         }catch(IllegalArgumentException e){
             throw new InsufficientAddressInformationException();
         }

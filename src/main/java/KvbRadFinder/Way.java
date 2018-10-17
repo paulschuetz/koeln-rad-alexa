@@ -3,20 +3,41 @@ package KvbRadFinder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
-@Getter @EqualsAndHashCode @ToString
+import static KvbRadFinder.Constants.METERS_PER_MINUTE;
+
+@Accessors(fluent = true, chain = true)
+@Getter
+@EqualsAndHashCode @ToString
 public class Way{
 
     private GeoLocation start;
     private GeoLocation destination;
     private double distance;
+    private int duration;
 
     public Way(GeoLocation start, GeoLocation destination){
         this.start = start;
         this.destination = destination;
         this.distance = calculateDistance(start, destination);
+        this.duration = (int) Math.ceil(this.distance/METERS_PER_MINUTE);
     }
 
+    public String durationAsSpeech(){
+        if(this.duration<2) return "eine Minute";
+        else return Integer.toString(duration) +  " Minuten";
+    }
+
+    /**
+     * distance rounded to 50 Meter steps
+     */
+    public String distanceAsSpeech(){
+       int roundedDistance = ((int) Math.ceil(distance/50)) * 50;
+       return Integer.toString(roundedDistance) + " Meter";
+    }
+
+    @SuppressWarnings("Duplicates")
     private double calculateDistance(GeoLocation loc1, GeoLocation loc2) {
         double earthRadius = 6371000; //meters
         double dLat = Math.toRadians(loc2.getLatitude() - loc1.getLatitude());

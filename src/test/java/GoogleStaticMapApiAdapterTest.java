@@ -2,16 +2,19 @@ import KvbRadFinder.GeoLocation;
 import KvbRadFinder.StaticMap.GoogleStaticMapApiAdapter;
 import KvbRadFinder.StaticMap.ImageOptions;
 import KvbRadFinder.StaticMap.StaticMapImageCreator;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.GetRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
+import java.io.InputStream;
 import java.net.URI;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
 public class GoogleStaticMapApiAdapterTest {
@@ -24,9 +27,16 @@ public class GoogleStaticMapApiAdapterTest {
         StaticMapImageCreator googleStaticMapApi = new GoogleStaticMapApiAdapter();
         URI uri = googleStaticMapApi.constructMap(AUTOHAUS_DIRKES, BIKE, new ImageOptions());
 
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(uri.toString());
-        Response response = target.request().get();
-        assertTrue(response.getStatus()==200);
+        SetUp.initializeUnirest();
+
+        GetRequest get = Unirest.get(uri.toString());
+        try {
+            HttpResponse<InputStream> response = get.asBinary();
+            assertTrue(response.getStatus()==200, "status should be 200 but was " + response.getStatus());
+        } catch (UnirestException e) {
+            e.printStackTrace();
+            fail();
+        }
+
     }
 }
