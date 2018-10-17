@@ -10,7 +10,7 @@ public class SetUp {
 
     @SuppressWarnings("Duplicates")
     public static void initializeUnirest() {
-        if(!alreadyInitialized){
+        if (!alreadyInitialized) {
             Unirest.setObjectMapper(new ObjectMapper() {
                 private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
                         = new com.fasterxml.jackson.databind.ObjectMapper();

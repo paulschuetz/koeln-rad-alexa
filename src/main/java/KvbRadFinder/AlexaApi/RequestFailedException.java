@@ -1,14 +1,16 @@
 package KvbRadFinder.AlexaApi;
 
-public class RequestFailedException extends Exception{
+public class RequestFailedException extends Exception {
 
-    public RequestFailedException(){super();}
+    public RequestFailedException() {
+        super();
+    }
 
-    public RequestFailedException(String message){
+    public RequestFailedException(String message) {
         super(message);
     }
 
-    public RequestFailedException(String message, Throwable t){
+    public RequestFailedException(String message, Throwable t) {
         super(message, t);
     }
 

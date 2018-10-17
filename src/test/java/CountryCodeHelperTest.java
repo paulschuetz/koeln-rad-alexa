@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CountryCodeHelperTest {
     @Test
-    public void test(){
+    public void test() {
         String country = CountryCodeHelper.getCountry("DE");
-        assertEquals(country,"Deutschland");
+        assertEquals(country, "Deutschland");
     }
 }

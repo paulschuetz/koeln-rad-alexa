@@ -5,9 +5,11 @@ package KvbRadFinder.Geocoding.Exceptions;
  */
 public class InsufficientAddressInformationException extends Exception {
 
-    public InsufficientAddressInformationException(){super();}
+    public InsufficientAddressInformationException() {
+        super();
+    }
 
-    public InsufficientAddressInformationException(String message){
+    public InsufficientAddressInformationException(String message) {
         super(message);
     }
 

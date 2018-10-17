@@ -10,7 +10,11 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.Map;
 
-@ToString @NoArgsConstructor @AllArgsConstructor @JsonIgnoreProperties(ignoreUnknown = true) @Getter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
 public class RResolvedLocation {
     private String geoCodeQuality;
     @JsonProperty("lat")
@@ -19,13 +23,15 @@ public class RResolvedLocation {
     private double longitude;
 
     @JsonProperty("results")
-    private void getNestedProperties(Object[] results){
-        Map<String, Object> result = (Map<String,Object>) results[0];
+    private void getNestedProperties(Object[] results) {
+        Map<String, Object> result = (Map<String, Object>) results[0];
         ArrayList<Object> locations = (ArrayList) result.get("locations");
-        Map<String, Object> location =  (Map<String, Object>) locations.get(0);
+        Map<String, Object> location = (Map<String, Object>) locations.get(0);
         this.geoCodeQuality = (String) location.get("geocodeQuality");
-        Map<String,Double> latlng = (Map<String,Double>) location.get("latLng");
-        this.latitude = (Double) latlng.get("lat").doubleValue();
-        this.longitude = (Double) latlng.get("lng").doubleValue();
+        Map<String, Double> latlng = (Map<String, Double>) location.get("latLng");
+        this.latitude = (Double) latlng.get("lat")
+                .doubleValue();
+        this.longitude = (Double) latlng.get("lng")
+                .doubleValue();
     }
 }

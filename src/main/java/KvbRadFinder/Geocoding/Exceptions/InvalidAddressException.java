@@ -1,3 +1,4 @@
 package KvbRadFinder.Geocoding.Exceptions;
 
-public class InvalidAddressException extends Exception { }
+public class InvalidAddressException extends Exception {
+}
