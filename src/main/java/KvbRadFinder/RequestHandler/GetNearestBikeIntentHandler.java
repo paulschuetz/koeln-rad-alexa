@@ -33,10 +33,10 @@ import java.util.stream.Collectors;
 
 import static KvbRadFinder.Constants.LARGE_IMAGE;
 import static KvbRadFinder.Constants.SMALL_IMAGE;
-import static KvbRadFinder.Constants.UNKNOWN_FAILURE;
+import static KvbRadFinder.Constants.UNKNOWN_FAILURE_RESPONSE;
 import static KvbRadFinder.HandlerInputUtilities.deviceHasDisplay;
-import static KvbRadFinder.Responses.INSUFFICIENT_ADDRESS_INFORMATION;
-import static KvbRadFinder.Responses.UNKNOWN_FAILURE;
+import static KvbRadFinder.Responses.INSUFFICIENT_ADDRESS_INFORMATION_RESPONSE;
+import static KvbRadFinder.Responses.UNKNOWN_FAILURE_RESPONSE;
 import static KvbRadFinder.StaticMap.SpeechUtilities.LINE_BREAK;
 import static KvbRadFinder.StaticMap.SpeechUtilities.replaceUmlauteWithUnicode;
 import static com.amazon.ask.request.Predicates.intentName;
@@ -89,14 +89,11 @@ public class GetNearestBikeIntentHandler implements RequestHandler {
                     .build();
 
         } catch (InsufficientAddressInformationException e) {
-            return handlerInput.getResponseBuilder()
-                    .withSpeech("Die Addressinformationen deines Echo Geraets sind nicht vollstaendig oder fehlerhaft. Bitte öffne deine Alexa App und aktualisiere die hinterlegten Informationen.")
-                    .withShouldEndSession(true)
-                    .build();
+            return INSUFFICIENT_ADDRESS_INFORMATION_RESPONSE(handlerInput);
         } catch (RequestFailedException e) {
             e.printStackTrace();
             return handlerInput.getResponseBuilder()
-                    .withSpeech(UNKNOWN_FAILURE)
+                    .withSpeech(UNKNOWN_FAILURE_RESPONSE)
                     .withShouldEndSession(true)
                     .build();
         }
@@ -106,9 +103,9 @@ public class GetNearestBikeIntentHandler implements RequestHandler {
         try {
             userLocation = geocodingService.getGeoLocation(userAddress.getAsSearchString());
         } catch (ExternalServiceCommunicationException | AuthorizationException e) {
-            return UNKNOWN_FAILURE(handlerInput);
+            return UNKNOWN_FAILURE_RESPONSE(handlerInput);
         } catch (KvbRadFinder.Geocoding.Exceptions.InsufficientAddressInformationException e) {
-            return INSUFFICIENT_ADDRESS_INFORMATION(handlerInput);
+            return INSUFFICIENT_ADDRESS_INFORMATION_RESPONSE(handlerInput);
         }
         // okay jetzt werden die Räder gefetcht
         Set<Bike> bikes = nextBikeDataFetcher.getBikes();
@@ -123,7 +120,7 @@ public class GetNearestBikeIntentHandler implements RequestHandler {
         try {
             bikeAddress = geocodingService.getAddress(nearestBike.destination());
         } catch (ExternalServiceCommunicationException | AuthorizationException e) {
-            return UNKNOWN_FAILURE(handlerInput);
+            return UNKNOWN_FAILURE_RESPONSE(handlerInput);
         }
 
         // now get the image

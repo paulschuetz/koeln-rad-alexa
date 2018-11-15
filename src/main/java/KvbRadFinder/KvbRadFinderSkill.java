@@ -21,12 +21,8 @@ public class KvbRadFinderSkill {
 
 
     public Skill getSkill() {
-        requestHandlers.forEach(requestHandler -> log.info("requestHandler: " + requestHandler.getClass()
-                .getSimpleName()));
         return Skills.standard()
-                .addRequestHandlers(
-                        new ArrayList<>(this.requestHandlers)
-                )
+                .addRequestHandlers(new ArrayList<>(this.requestHandlers))
                 .build();
     }
 

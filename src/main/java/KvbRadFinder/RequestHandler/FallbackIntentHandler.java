@@ -24,7 +24,7 @@ public class FallbackIntentHandler implements RequestHandler {
     @Override
     public Optional<Response> handle(HandlerInput handlerInput) {
         return handlerInput.getResponseBuilder()
-                .withSpeech(Constants.UNKNOWN_INTENT)
+                .withSpeech(Constants.UNKNOWN_INTENT_RESPONSE)
                 .withShouldEndSession(false)
                 .build();
     }

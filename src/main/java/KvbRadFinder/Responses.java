@@ -5,20 +5,21 @@ import com.amazon.ask.model.Response;
 
 import java.util.Optional;
 
-import static KvbRadFinder.Constants.UNKNOWN_FAILURE;
+import static KvbRadFinder.Constants.INSUFFICIENT_ADDRESS_INFORMATION_RESPONSE;
+import static KvbRadFinder.Constants.UNKNOWN_FAILURE_RESPONSE;
 
 public class Responses {
 
-    public static Optional<Response> UNKNOWN_FAILURE(HandlerInput input) {
+    public static Optional<Response> UNKNOWN_FAILURE_RESPONSE(HandlerInput input) {
         return input.getResponseBuilder()
-                .withSpeech(UNKNOWN_FAILURE)
+                .withSpeech(UNKNOWN_FAILURE_RESPONSE)
                 .withShouldEndSession(true)
                 .build();
     }
 
-    public static Optional<Response> INSUFFICIENT_ADDRESS_INFORMATION(HandlerInput input) {
+    public static Optional<Response> INSUFFICIENT_ADDRESS_INFORMATION_RESPONSE(HandlerInput input) {
         return input.getResponseBuilder()
-                .withSpeech("Die von Ihnen eingetragenen Standortinformationen von ihrem Echo Geraet reichen nicht aus um es zu lokalisieren. Bitte ergänzen Sie die Informationen um dieses Service nutzen zu können")
+                .withSpeech(INSUFFICIENT_ADDRESS_INFORMATION_RESPONSE)
                 .withShouldEndSession(true)
                 .build();
     }
