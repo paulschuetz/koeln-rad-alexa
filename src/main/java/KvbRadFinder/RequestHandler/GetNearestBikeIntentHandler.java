@@ -4,6 +4,7 @@ import KvbRadFinder.AlexaApi.AlexaAddressApiAdapter;
 import KvbRadFinder.AlexaApi.InsufficientAddressInformationException;
 import KvbRadFinder.AlexaApi.MissingUserAuthorizationException;
 import KvbRadFinder.AlexaApi.RequestFailedException;
+import KvbRadFinder.BikeProvider.BikeProvider;
 import KvbRadFinder.Geocoding.Exceptions.AuthorizationException;
 import KvbRadFinder.Geocoding.Exceptions.ExternalServiceCommunicationException;
 import KvbRadFinder.Geocoding.GeocodingService;
@@ -11,7 +12,6 @@ import KvbRadFinder.Model.Address;
 import KvbRadFinder.Model.Bike;
 import KvbRadFinder.Model.GeoLocation;
 import KvbRadFinder.Model.Way;
-import KvbRadFinder.NextBike.NextBikeDataFetcher;
 import KvbRadFinder.StaticMap.ImageOptions;
 import KvbRadFinder.StaticMap.StaticMapImageCreator;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
@@ -21,7 +21,6 @@ import com.amazon.ask.model.interfaces.display.BodyTemplate7;
 import com.amazon.ask.model.interfaces.display.ImageInstance;
 import com.amazon.ask.model.interfaces.display.Template;
 import com.amazon.ask.model.ui.Image;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,10 +34,11 @@ import static KvbRadFinder.Constants.LARGE_IMAGE;
 import static KvbRadFinder.Constants.SMALL_IMAGE;
 import static KvbRadFinder.Constants.UNKNOWN_FAILURE_RESPONSE;
 import static KvbRadFinder.HandlerInputUtilities.deviceHasDisplay;
-import static KvbRadFinder.Responses.INSUFFICIENT_ADDRESS_INFORMATION_RESPONSE;
+import static KvbRadFinder.Responses.INSUFFICIENT_ADRESS_INFORMATION_RESPONSE;
+import static KvbRadFinder.Responses.MISSING_USER_LOCATION_PERMISSIONS_RESPONSE;
 import static KvbRadFinder.Responses.UNKNOWN_FAILURE_RESPONSE;
-import static KvbRadFinder.StaticMap.SpeechUtilities.LINE_BREAK;
-import static KvbRadFinder.StaticMap.SpeechUtilities.replaceUmlauteWithUnicode;
+import static KvbRadFinder.SpeechUtilities.LINE_BREAK;
+import static KvbRadFinder.SpeechUtilities.replaceUmlauteWithUnicode;
 import static com.amazon.ask.request.Predicates.intentName;
 
 @Slf4j
@@ -46,14 +46,14 @@ public class GetNearestBikeIntentHandler implements RequestHandler {
 
     private GeocodingService geocodingService;
     private AlexaAddressApiAdapter alexaAddressApi;
-    private NextBikeDataFetcher nextBikeDataFetcher;
+    private BikeProvider bikeProvider;
     private StaticMapImageCreator staticMapImageCreator;
 
     @Inject
-    GetNearestBikeIntentHandler(GeocodingService geocodingService, AlexaAddressApiAdapter alexaAddressApiAdapter, NextBikeDataFetcher nextBikeDataFetcher, StaticMapImageCreator staticMapImageCreator) {
+    GetNearestBikeIntentHandler(GeocodingService geocodingService, AlexaAddressApiAdapter alexaAddressApiAdapter, BikeProvider bikeProvider, StaticMapImageCreator staticMapImageCreator) {
         this.geocodingService = geocodingService;
         this.alexaAddressApi = alexaAddressApiAdapter;
-        this.nextBikeDataFetcher = nextBikeDataFetcher;
+        this.bikeProvider = bikeProvider;
         this.staticMapImageCreator = staticMapImageCreator;
     }
 
@@ -83,13 +83,10 @@ public class GetNearestBikeIntentHandler implements RequestHandler {
             userAddress = alexaAddressApi.getUserLocation(apiAccessToken, deviceId, apiEndpoint);
             System.out.println("User Location: " + userAddress.toString());
         } catch (MissingUserAuthorizationException e) {
-            return handlerInput.getResponseBuilder()
-                    .withAskForPermissionsConsentCard(ImmutableList.of("read::alexa:device:all:address"))
-                    .withSpeech("Du musst uns zunaechst die Erlaubnis geben den Standort deines Alexa Geraets aus deinem Alexa Profil abzurufen. Oeffne dazu bitte jetzt deine Alexa App.")
-                    .build();
+            return MISSING_USER_LOCATION_PERMISSIONS_RESPONSE(handlerInput);
 
         } catch (InsufficientAddressInformationException e) {
-            return INSUFFICIENT_ADDRESS_INFORMATION_RESPONSE(handlerInput);
+            return INSUFFICIENT_ADRESS_INFORMATION_RESPONSE(handlerInput);
         } catch (RequestFailedException e) {
             e.printStackTrace();
             return handlerInput.getResponseBuilder()
@@ -105,10 +102,10 @@ public class GetNearestBikeIntentHandler implements RequestHandler {
         } catch (ExternalServiceCommunicationException | AuthorizationException e) {
             return UNKNOWN_FAILURE_RESPONSE(handlerInput);
         } catch (KvbRadFinder.Geocoding.Exceptions.InsufficientAddressInformationException e) {
-            return INSUFFICIENT_ADDRESS_INFORMATION_RESPONSE(handlerInput);
+            return INSUFFICIENT_ADRESS_INFORMATION_RESPONSE(handlerInput);
         }
         // okay jetzt werden die Räder gefetcht
-        Set<Bike> bikes = nextBikeDataFetcher.getBikes();
+        Set<Bike> bikes = bikeProvider.getBikes(userLocation);
         Set<GeoLocation> bikeLocations = bikes.stream()
                 .map(Bike::getGeoLocation)
                 .collect(Collectors.toSet());

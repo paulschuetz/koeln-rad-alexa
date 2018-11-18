@@ -1,4 +1,4 @@
-package KvbRadFinder.StaticMap;
+package KvbRadFinder;
 
 public class SpeechUtilities {
 

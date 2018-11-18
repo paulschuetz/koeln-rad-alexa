@@ -1,10 +1,10 @@
 package IntegrationTest;
 
+import KvbRadFinder.BikeProvider.BikeProvider;
 import KvbRadFinder.Model.Bike;
 import KvbRadFinder.Model.GeoLocation;
 import KvbRadFinder.Model.Way;
-import KvbRadFinder.NextBike.NextBikeDataFetcher;
-import KvbRadFinder.NextBike.NextBikeXMLDataFetcher;
+import KvbRadFinder.BikeProvider.NextBike.NextBikeXMLDataFetcher;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +18,8 @@ public class NextBikeApi_NearestBike {
 
     @Test
     public void getNearestKvbBike() {
-        NextBikeDataFetcher nextBikeApi = new NextBikeXMLDataFetcher();
-        Set<Bike> bikes = nextBikeApi.getBikes();
+        BikeProvider nextBikeApi = new NextBikeXMLDataFetcher();
+        Set<Bike> bikes = nextBikeApi.getBikes(new GeoLocation(0, 0));
         Set<GeoLocation> bikeLocations = bikes.stream()
                 .map(Bike::getGeoLocation)
                 .collect(Collectors.toSet());

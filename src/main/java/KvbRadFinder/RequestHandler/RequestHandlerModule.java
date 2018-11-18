@@ -1,10 +1,10 @@
 package KvbRadFinder.RequestHandler;
 
 import KvbRadFinder.AlexaApi.AlexaAddressApiAdapter;
+import KvbRadFinder.BikeProvider.BikeProvider;
 import KvbRadFinder.Geocoding.GeocodingModule;
 import KvbRadFinder.Geocoding.GeocodingService;
-import KvbRadFinder.NextBike.NextBikeDataFetcher;
-import KvbRadFinder.NextBike.NextBikeModule;
+import KvbRadFinder.BikeProvider.BikeProviderModule;
 import KvbRadFinder.StaticMap.StaticMapImageCreator;
 import KvbRadFinder.StaticMap.StaticMapModule;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
@@ -12,7 +12,7 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
 
-@Module(includes = {GeocodingModule.class, NextBikeModule.class, StaticMapModule.class})
+@Module(includes = {GeocodingModule.class, BikeProviderModule.class, StaticMapModule.class})
 public class RequestHandlerModule {
 
     @Provides
@@ -29,8 +29,8 @@ public class RequestHandlerModule {
 
     @Provides
     @IntoSet
-    RequestHandler getNearestBikeIntentHandler(GeocodingService geocodingService, NextBikeDataFetcher nextBikeDataFetcher, StaticMapImageCreator staticMapImageCreator, AlexaAddressApiAdapter alexaAddressApiAdapter) {
-        return new GetNearestBikeIntentHandler(geocodingService, alexaAddressApiAdapter, nextBikeDataFetcher, staticMapImageCreator);
+    RequestHandler getNearestBikeIntentHandler(GeocodingService geocodingService, BikeProvider bikeProvider, StaticMapImageCreator staticMapImageCreator, AlexaAddressApiAdapter alexaAddressApiAdapter) {
+        return new GetNearestBikeIntentHandler(geocodingService, alexaAddressApiAdapter, bikeProvider, staticMapImageCreator);
     }
 
     @Provides

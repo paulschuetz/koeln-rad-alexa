@@ -27,7 +27,7 @@ public class RResolvedAddress {
     @JsonProperty("results")
     public void getNestedProperties(Object[] results) {
         Map<String, Object> result = (Map<String, Object>) results[0];
-        ArrayList<Object> locations = (ArrayList) result.get("locations");
+        ArrayList<Object> locations = (ArrayList<Object>) result.get("locations");
         Map<String, Object> location = (Map<String, Object>) locations.get(0);
 
         String postalCode = (String) location.get("postalCode");
