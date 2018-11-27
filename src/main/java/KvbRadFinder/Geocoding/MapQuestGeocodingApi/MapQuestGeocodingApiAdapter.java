@@ -1,11 +1,11 @@
 package KvbRadFinder.Geocoding.MapQuestGeocodingApi;
 
+import KvbRadFinder.AlexaApi.InsufficientAddressInformationException;
 import KvbRadFinder.Geocoding.Exceptions.AuthorizationException;
 import KvbRadFinder.Geocoding.Exceptions.ExternalServiceCommunicationException;
-import KvbRadFinder.Geocoding.Exceptions.InsufficientAddressInformationException;
 import KvbRadFinder.Geocoding.GeocodingService;
 import KvbRadFinder.Keys;
-import KvbRadFinder.Model.Address;
+import KvbRadFinder.Model.Adress;
 import KvbRadFinder.Model.GeoLocation;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
@@ -60,7 +60,7 @@ public class MapQuestGeocodingApiAdapter implements GeocodingService {
     }
 
     @Override
-    public Address getAddress(GeoLocation geoLocation) throws ExternalServiceCommunicationException, AuthorizationException {
+    public Adress getAddress(GeoLocation geoLocation) throws ExternalServiceCommunicationException, AuthorizationException {
 
         GeocodeReverseApiQuery query = new GeocodeReverseApiQuery(geoLocation);
         GetRequest get = Unirest.get(query.construct())
@@ -79,7 +79,7 @@ public class MapQuestGeocodingApiAdapter implements GeocodingService {
 
         RResolvedAddress location = response.getBody();
 
-        return new Address(location.getCountry(), location.getCity(), location.getPostalCode(), location.getStreet());
+        return new Adress(location.getCountry(), location.getCity(), location.getPostalCode(), location.getStreet());
 
     }
 

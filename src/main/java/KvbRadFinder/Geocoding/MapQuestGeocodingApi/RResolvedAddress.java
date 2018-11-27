@@ -20,7 +20,7 @@ import java.util.Map;
 @Slf4j
 public class RResolvedAddress {
     String city;
-    int postalCode;
+    String postalCode;
     String street;
     String country;
 
@@ -31,10 +31,7 @@ public class RResolvedAddress {
         Map<String, Object> location = (Map<String, Object>) locations.get(0);
 
         String postalCode = (String) location.get("postalCode");
-        if (postalCode.length() == 5) {
-            this.postalCode = Integer.parseInt(postalCode);
-            this.postalCode = 50825;
-        }
+        this.postalCode = postalCode;
 
         this.city = (String) location.get("adminArea5");
 

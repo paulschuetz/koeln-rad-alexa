@@ -1,6 +1,5 @@
 package KvbRadFinder.RequestHandler;
 
-import KvbRadFinder.Constants;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
@@ -8,6 +7,7 @@ import com.amazon.ask.model.Response;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static KvbRadFinder.Responses.CANCEL_RESPONSE;
 import static com.amazon.ask.request.Predicates.intentName;
 
 public class CancelAndStopIntentHandler implements RequestHandler {
@@ -23,9 +23,6 @@ public class CancelAndStopIntentHandler implements RequestHandler {
 
     @Override
     public Optional<Response> handle(HandlerInput input) {
-        return input.getResponseBuilder()
-                .withSpeech(Constants.CANCEL_RESPONSE)
-                .withShouldEndSession(true)
-                .build();
+        return CANCEL_RESPONSE(input);
     }
 }

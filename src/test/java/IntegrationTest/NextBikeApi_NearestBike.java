@@ -24,9 +24,9 @@ public class NextBikeApi_NearestBike {
                 .map(Bike::getGeoLocation)
                 .collect(Collectors.toSet());
 
-        Way nearest = AUTOHAUS_DIRKES.nearest(bikeLocations);
+        Way nearest = AUTOHAUS_DIRKES.nearestWay(bikeLocations);
 
-        log.debug("nearest bike: " + nearest.toString());
+        log.debug("nearestWay bike: " + nearest.toString());
 
     }
 

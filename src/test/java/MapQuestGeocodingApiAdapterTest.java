@@ -1,7 +1,7 @@
 import KvbRadFinder.Geocoding.Exceptions.AuthorizationException;
 import KvbRadFinder.Geocoding.Exceptions.ExternalServiceCommunicationException;
 import KvbRadFinder.Geocoding.MapQuestGeocodingApi.MapQuestGeocodingApiAdapter;
-import KvbRadFinder.Model.Address;
+import KvbRadFinder.Model.Adress;
 import KvbRadFinder.Model.GeoLocation;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -34,9 +34,9 @@ public class MapQuestGeocodingApiAdapterTest {
     public void getAddress_validInput() {
         SetUp.initializeUnirest();
         try {
-            Address address = mapQuestApi.getAddress(AUTOHAUS_DIRKES);
+            Adress address = mapQuestApi.getAddress(AUTOHAUS_DIRKES);
             log.info("Addess: " + address.toString());
-            assertTrue(address.getPostalCode() == 50825);
+            assertTrue(address.getPostalCode().equals("50825"));
             assertTrue(address.getStreet()
                     .contains("Maarweg"));
         } catch (AuthorizationException e) {

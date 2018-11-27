@@ -8,7 +8,7 @@ import KvbRadFinder.BikeProvider.BikeProvider;
 import KvbRadFinder.Geocoding.Exceptions.AuthorizationException;
 import KvbRadFinder.Geocoding.Exceptions.ExternalServiceCommunicationException;
 import KvbRadFinder.Geocoding.GeocodingService;
-import KvbRadFinder.Model.Address;
+import KvbRadFinder.Model.Adress;
 import KvbRadFinder.Model.Bike;
 import KvbRadFinder.Model.GeoLocation;
 import KvbRadFinder.Model.Way;
@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 
 import static KvbRadFinder.Constants.LARGE_IMAGE;
 import static KvbRadFinder.Constants.SMALL_IMAGE;
-import static KvbRadFinder.Constants.UNKNOWN_FAILURE_RESPONSE;
 import static KvbRadFinder.HandlerInputUtilities.deviceHasDisplay;
 import static KvbRadFinder.Responses.INSUFFICIENT_ADRESS_INFORMATION_RESPONSE;
 import static KvbRadFinder.Responses.MISSING_USER_LOCATION_PERMISSIONS_RESPONSE;
@@ -41,6 +40,7 @@ import static KvbRadFinder.SpeechUtilities.LINE_BREAK;
 import static KvbRadFinder.SpeechUtilities.replaceUmlauteWithUnicode;
 import static com.amazon.ask.request.Predicates.intentName;
 
+@SuppressWarnings("Duplicates")
 @Slf4j
 public class GetNearestBikeIntentHandler implements RequestHandler {
 
@@ -78,21 +78,17 @@ public class GetNearestBikeIntentHandler implements RequestHandler {
                 .getDevice()
                 .getDeviceId();
 
-        Address userAddress;
+        Adress userAddress;
         try {
             userAddress = alexaAddressApi.getUserLocation(apiAccessToken, deviceId, apiEndpoint);
             System.out.println("User Location: " + userAddress.toString());
         } catch (MissingUserAuthorizationException e) {
             return MISSING_USER_LOCATION_PERMISSIONS_RESPONSE(handlerInput);
-
         } catch (InsufficientAddressInformationException e) {
             return INSUFFICIENT_ADRESS_INFORMATION_RESPONSE(handlerInput);
         } catch (RequestFailedException e) {
             e.printStackTrace();
-            return handlerInput.getResponseBuilder()
-                    .withSpeech(UNKNOWN_FAILURE_RESPONSE)
-                    .withShouldEndSession(true)
-                    .build();
+            return UNKNOWN_FAILURE_RESPONSE(handlerInput);
         }
         // if we reached this line we have got the user address
         // now get location for that address:
@@ -101,7 +97,7 @@ public class GetNearestBikeIntentHandler implements RequestHandler {
             userLocation = geocodingService.getGeoLocation(userAddress.getAsSearchString());
         } catch (ExternalServiceCommunicationException | AuthorizationException e) {
             return UNKNOWN_FAILURE_RESPONSE(handlerInput);
-        } catch (KvbRadFinder.Geocoding.Exceptions.InsufficientAddressInformationException e) {
+        } catch (InsufficientAddressInformationException e) {
             return INSUFFICIENT_ADRESS_INFORMATION_RESPONSE(handlerInput);
         }
         // okay jetzt werden die Räder gefetcht
@@ -110,10 +106,10 @@ public class GetNearestBikeIntentHandler implements RequestHandler {
                 .map(Bike::getGeoLocation)
                 .collect(Collectors.toSet());
 
-        // get nearest bike
-        Way nearestBike = userLocation.nearest(bikeLocations);
+        // get nearestWay bike
+        Way nearestBike = userLocation.nearestWay(bikeLocations);
         // get street name for geolocation
-        Address bikeAddress;
+        Adress bikeAddress;
         try {
             bikeAddress = geocodingService.getAddress(nearestBike.destination());
         } catch (ExternalServiceCommunicationException | AuthorizationException e) {
@@ -173,7 +169,7 @@ public class GetNearestBikeIntentHandler implements RequestHandler {
                 .build();
     }
 
-    private String nearestBikeCardText(Way bike, Address bikeAddress) {
+    private String nearestBikeCardText(Way bike, Adress bikeAddress) {
         String cardText = "" +
                 "Adresse: " + bikeAddress.getStreet() + LINE_BREAK +
                 "Entfernung: ~" + bike.distanceAsSpeech() + LINE_BREAK +

@@ -1,6 +1,5 @@
 package KvbRadFinder.RequestHandler;
 
-import KvbRadFinder.Constants;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
@@ -8,6 +7,7 @@ import com.amazon.ask.model.Response;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static KvbRadFinder.Responses.UNSUPPORTED_INTENT_RESPONSE;
 import static com.amazon.ask.request.Predicates.intentName;
 
 public class FallbackIntentHandler implements RequestHandler {
@@ -23,9 +23,6 @@ public class FallbackIntentHandler implements RequestHandler {
 
     @Override
     public Optional<Response> handle(HandlerInput handlerInput) {
-        return handlerInput.getResponseBuilder()
-                .withSpeech(Constants.UNKNOWN_INTENT_RESPONSE)
-                .withShouldEndSession(false)
-                .build();
+        return UNSUPPORTED_INTENT_RESPONSE(handlerInput);
     }
 }

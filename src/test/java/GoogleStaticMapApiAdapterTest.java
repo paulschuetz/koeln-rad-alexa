@@ -22,7 +22,7 @@ public class GoogleStaticMapApiAdapterTest {
     final static GeoLocation BIKE = new GeoLocation(50.9460428, 6.896832017);
 
     @Test
-    public void test() {
+    public void testGoogleStaticMap() {
         StaticMapImageCreator googleStaticMapApi = new GoogleStaticMapApiAdapter();
         URI uri = googleStaticMapApi.constructMap(AUTOHAUS_DIRKES, BIKE, new ImageOptions());
 

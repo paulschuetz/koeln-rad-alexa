@@ -17,14 +17,14 @@ public class RequestHandlerModule {
 
     @Provides
     @IntoSet
-    RequestHandler cancelAndStopIntentHandler(CancelAndStopIntentHandler cancelAndStopIntentHandler) {
-        return cancelAndStopIntentHandler;
+    RequestHandler cancelAndStopIntentHandler() {
+        return new FallbackIntentHandler();
     }
 
     @Provides
     @IntoSet
-    RequestHandler fallBackIntentHandler(FallbackIntentHandler fallBackIntentHandler) {
-        return fallBackIntentHandler;
+    RequestHandler fallBackIntentHandler() {
+        return new FallbackIntentHandler();
     }
 
     @Provides
@@ -35,21 +35,14 @@ public class RequestHandlerModule {
 
     @Provides
     @IntoSet
-    RequestHandler helpIntentHandler(HelpIntentHandler helpIntentHandler) {
-        return helpIntentHandler;
+    RequestHandler helpIntentHandler() {
+        return new HelpIntentHandler();
     }
 
     @Provides
     @IntoSet
-    RequestHandler launchIntentHandler(LaunchIntentHandler launchIntentHandler) {
-        return launchIntentHandler;
+    RequestHandler launchIntentHandler(){
+        return new LaunchIntentHandler();
     }
-
-    @Provides
-    @IntoSet
-    RequestHandler welcomeIntentHandler(WelcomeIntentHandler welcomeIntentHandler) {
-        return welcomeIntentHandler;
-    }
-
 
 }

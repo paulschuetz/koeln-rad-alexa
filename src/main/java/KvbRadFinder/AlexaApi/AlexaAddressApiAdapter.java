@@ -1,6 +1,6 @@
 package KvbRadFinder.AlexaApi;
 
-import KvbRadFinder.Model.Address;
+import KvbRadFinder.Model.Adress;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -18,7 +18,7 @@ public class AlexaAddressApiAdapter {
 
     private static final String apiAdressPath = "/v1/devices/*deviceId*/settings/address";
 
-    public Address getUserLocation(String apiToken, String deviceId, String apiEndpoint) throws MissingUserAuthorizationException, RequestFailedException, InsufficientAddressInformationException {
+    public Adress getUserLocation(String apiToken, String deviceId, String apiEndpoint) throws MissingUserAuthorizationException, RequestFailedException, InsufficientAddressInformationException {
         String url = apiEndpoint + apiAdressPath.replace("*deviceId*", deviceId);
         System.out.println("Get the location of the user: " + url);
         try {
@@ -35,7 +35,7 @@ public class AlexaAddressApiAdapter {
             if (response.getStatus() != HttpStatus.SC_OK)
                 throw new RequestFailedException("status code was " + response.getStatus());
 
-            Address userAddress = createAddress(response);
+            Adress userAddress = createAddress(response);
             return userAddress;
 
         } catch (UnirestException e) {
@@ -43,7 +43,7 @@ public class AlexaAddressApiAdapter {
         }
     }
 
-    private Address createAddress(HttpResponse<JsonNode> response) throws InsufficientAddressInformationException {
+    private Adress createAddress(HttpResponse<JsonNode> response) throws InsufficientAddressInformationException {
         String city = null;
         if (!response.getBody()
                 .getObject()
@@ -52,9 +52,9 @@ public class AlexaAddressApiAdapter {
                     .getObject()
                     .getString("city");
 
-        int postalCode = response.getBody()
+        String postalCode = response.getBody()
                 .getObject()
-                .getInt("postalCode");
+                .getString("postalCode");
 
         String address = null;
         if (!response.getBody()
@@ -85,7 +85,7 @@ public class AlexaAddressApiAdapter {
         }
 
         try {
-            return new Address(country, city, postalCode, address);
+            return new Adress(country, city, postalCode, address);
         } catch (IllegalArgumentException e) {
             throw new InsufficientAddressInformationException();
         }

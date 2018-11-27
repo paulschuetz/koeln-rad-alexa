@@ -20,9 +20,9 @@ public class WayTest {
 
         Set<GeoLocation> bikes = Sets.newHashSet(bike1, bike2, bike3, bike4);
 
-        assertTrue(start.nearest(bikes)
+        assertTrue(start.nearestWay(bikes)
                 .start() == start);
-        assertTrue(start.nearest(bikes)
+        assertTrue(start.nearestWay(bikes)
                 .destination() == bike4);
     }
 }

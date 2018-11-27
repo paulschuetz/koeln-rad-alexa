@@ -8,6 +8,7 @@ import com.amazon.ask.model.Response;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static KvbRadFinder.Responses.HELP_RESPONSE;
 import static com.amazon.ask.request.Predicates.intentName;
 
 public class HelpIntentHandler implements RequestHandler {
@@ -23,9 +24,6 @@ public class HelpIntentHandler implements RequestHandler {
 
     @Override
     public Optional<Response> handle(HandlerInput input) {
-        return input.getResponseBuilder()
-                .withSpeech(Constants.HELP_SPEECH)
-                .withShouldEndSession(false)
-                .build();
+        return HELP_RESPONSE(input);
     }
 }
